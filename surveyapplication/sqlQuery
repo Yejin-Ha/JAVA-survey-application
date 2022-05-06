@@ -1,0 +1,17 @@
+################################# Create
+-------INFO table 持失
+create table "INFO"(
+  "INFO_NUMBER" number PRIMARY KEY,
+  "NAME" VARCHAR2(100) not null,
+  "PSWD" varchar2(100) not null,
+  "AGE" number not null
+);
+
+-------INFO sequence 持失
+create SEQUENCE "SEQ_INFO" start with 1;
+
+
+
+################################# Delete
+drop table "INFO";
+drop sequence "SEQ_INFO";
