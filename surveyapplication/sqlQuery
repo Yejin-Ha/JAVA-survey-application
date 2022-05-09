@@ -10,6 +10,26 @@ create table "INFO"(
 -------INFO sequence 持失
 create SEQUENCE "SEQ_INFO" start with 1;
 
+-------BRAND table 持失
+create table BRAND(
+    BRAND_NUMBER number PRIMARY KEY,
+    TITLE varchar2(100) not null
+);
+
+-------BRAND sequence 持失
+create SEQUENCE "SEQ_BRAND" start with 1;
+
+-------VOTE table 持失
+create table "VOTE" (
+    "VOTE_NUMBER" number PRIMARY KEY,
+    "INFO_NUMBER" number,
+    "BRAND_NUMBER" number,
+    CONSTRAINT "VOTE_FK_INFO" FOREIGN KEY ("INFO_NUMBER") REFERENCES "INFO"("INFO_NUMBER"),
+    CONSTRAINT "VOTE_FK_BRAND" FOREIGN KEY ("BRAND_NUMBER") REFERENCES "BRAND"("BRAND_NUMBER")
+);
+
+-------VOTE sequence 持失
+create sequence "SEQ_VOTE" start with 1;
 
 
 ################################# Delete

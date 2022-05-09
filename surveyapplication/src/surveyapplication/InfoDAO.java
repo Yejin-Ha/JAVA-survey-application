@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class User {
+public class InfoDAO {
 	private JdbcTemplate jdbcTemplate;
 
 	public boolean signUp(String name, String pswd, int age) {
