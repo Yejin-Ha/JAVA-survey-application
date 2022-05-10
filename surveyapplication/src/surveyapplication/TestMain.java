@@ -56,6 +56,14 @@ public class TestMain {
 				}
 				break;
 			case 2:
+				VoteDAO vDao = new VoteDAO();
+				int voteMenu = sc.nextInt();
+				if (voteMenu == 1)
+					vDao.selectAll();
+				else if (voteMenu == 2) {
+					vDao.selectAge();
+				}else 
+					System.out.println("메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");				
 				break;
 			}
 		}
