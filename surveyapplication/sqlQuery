@@ -31,7 +31,22 @@ create table "VOTE" (
 -------VOTE sequence 생성
 create sequence "SEQ_VOTE" start with 1;
 
+-------사용자 정의 함수 AGE_RANGE 생성
+create or replace function "AGE_RANGE" (
+    IN_AGE in number
+)
+return number
+    is
+        OUT_AGE number;
+    begin 
+        OUT_AGE := floor(IN_AGE / 10 )* 10;
+    return OUT_AGE;
+end;
+
 
 ################################# Delete
 drop table "INFO";
+
 drop sequence "SEQ_INFO";
+drop sequence "SEQ_VOTE";
+drop sequence "SEQ_BRAND";

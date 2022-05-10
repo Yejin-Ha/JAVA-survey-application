@@ -9,11 +9,13 @@ public class InfoDAO {
 	private JdbcTemplate jdbcTemplate;
 
 	public boolean signUp(String name, String pswd, int age) {
+		if (isExist(name, pswd))
+			return false;
 		jdbcTemplate = JdbcTemplate.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "insert into \"INFO\" values (\"SEQ_INFO\".nextval, ?, ?, ?)";
-
+		String sql = "insert into \"INFO\" values (\"SEQ_INFO\".nextval, ?, ?, \"AGE_RANGE\"(?))";
+		boolean result = false;
 		try {
 			conn = jdbcTemplate.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -22,22 +24,52 @@ public class InfoDAO {
 			pstmt.setInt(3, age);
 
 			if (pstmt.executeUpdate() == 1)
-				return true;
+				result = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			jdbcTemplate.close(pstmt);
 			jdbcTemplate.close(conn);
 		}
-		return false;
+		return result;
 	}
 
+	// 회원가입 시 이름, 비밀번호가 동일한 회원이 존재하면 false 반환
+	public boolean isExist(String name, String pwd) {
+		jdbcTemplate = JdbcTemplate.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		boolean exist = false;
+		String sql = "select * from \"INFO\" where \"NAME\" = ? and \"PSWD\" = ?";
+
+		try {
+			conn = jdbcTemplate.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setString(2, pwd);
+			rs = pstmt.executeQuery();
+
+			if (rs.next())
+				exist = true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbcTemplate.close(pstmt);
+			jdbcTemplate.close(conn);
+		}
+		return exist;
+	}
+
+	// 
 	public int login(String name, String pwd) {
 		jdbcTemplate = JdbcTemplate.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "select \"INFO_NUMBER\" from \"INFO\" where name = ? and pswd = ?";
 		ResultSet rs = null;
+		String sql = "select \"INFO_NUMBER\" from \"INFO\" where name = ? and pswd = ?";
+		int result = 0;
 
 		try {
 			conn = jdbcTemplate.getConnection();
@@ -46,7 +78,7 @@ public class InfoDAO {
 			pstmt.setString(2, pwd);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				return rs.getInt(1);
+				result = rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -55,6 +87,6 @@ public class InfoDAO {
 			jdbcTemplate.close(pstmt);
 			jdbcTemplate.close(conn);
 		}
-		return 0;
+		return result;
 	}
 }
