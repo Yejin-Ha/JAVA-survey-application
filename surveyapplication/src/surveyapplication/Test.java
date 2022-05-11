@@ -1,6 +1,8 @@
 package surveyapplication;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
 //import java.
 public class Test {
 	public static Scanner sc = new Scanner(System.in);
@@ -12,14 +14,16 @@ public class Test {
 			System.out.println("1. 설문 참여하기");
 			System.out.println("2. 설문 현황 확인");
 			System.out.println("0. 종료");
-			String inMenu = sc.nextLine();
 			int menu = -1;
-			if(Character.isDigit(inMenu.charAt(0))) 
-				menu = (int)inMenu.charAt(0);
-			else {
-				System.out.println("숫자로 매뉴를 입력하세요.");
+			try {
+				menu = sc.nextInt();
+			} catch (InputMismatchException e) {
+				System.out.println("숫자를 입력하세요.");
 				continue;
+			} finally {
+				sc.nextLine();
 			}
+
 			if (menu == 0)
 				break;
 
@@ -63,30 +67,33 @@ public class Test {
 			case 2:
 				VoteDAO vDao = new VoteDAO();
 				int voteMenu = sc.nextInt();
+				sc.nextLine();
 				if (voteMenu == 1)
 					vDao.selectAll();
 				else if (voteMenu == 2) {
 					vDao.selectAge();
-				}else 
-					System.out.println("메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");				
+				} else
+					System.out.println("메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");
 				break;
 			default:
 				System.out.println("입력한 메뉴는 존재하지 않습니다. 다시 입력하세요.");
-				
 			}
 		}
 	}
 
 	public static void voteBrand(int infoNumber) {
 		BrandDAO bDao = new BrandDAO();
-		int select = sc.nextInt();
-		sc.nextLine();
-		if (select == 0) {
-			System.out.print("새로운 브랜드명을 입력하세요: ");
-			String brand = sc.nextLine();
-			bDao.insertBrand(infoNumber, brand);
-		} else {
-			bDao.selectBrand(infoNumber, select);
-		}
+		boolean flag = false;
+		do {
+			int select = sc.nextInt();
+			sc.nextLine();
+			if (select == 0) {
+				System.out.print("새로운 브랜드명을 입력하세요: ");
+				String brand = sc.nextLine();
+				flag = bDao.insertBrand(infoNumber, brand);
+			} else {
+				flag = bDao.selectBrand(infoNumber, select);
+			}
+		} while (!flag);
 	}
 }
