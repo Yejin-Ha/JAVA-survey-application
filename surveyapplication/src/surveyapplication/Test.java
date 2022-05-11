@@ -1,26 +1,31 @@
 package surveyapplication;
 
 import java.util.Scanner;
-
-public class TestMain {
+//import java.
+public class Test {
 	public static Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		System.out.println("환영");
+		System.out.println("☆☆☆☆환영합니다☆☆☆☆");
 
 		while (true) {
 			System.out.println("1. 설문 참여하기");
 			System.out.println("2. 설문 현황 확인");
 			System.out.println("0. 종료");
-			int menu = sc.nextInt();
-			sc.nextLine();
-
+			String inMenu = sc.nextLine();
+			int menu = -1;
+			if(Character.isDigit(inMenu.charAt(0))) 
+				menu = (int)inMenu.charAt(0);
+			else {
+				System.out.println("숫자로 매뉴를 입력하세요.");
+				continue;
+			}
 			if (menu == 0)
 				break;
 
 			switch (menu) {
 			case 1:
-				Participate p = new Participate();
+				InfoDAO iDao = new InfoDAO();
 				int infoNumber;
 				int subMenu = sc.nextInt();
 				sc.nextLine();
@@ -29,7 +34,7 @@ public class TestMain {
 					String name = sc.nextLine();
 					System.out.print("비밀번호: ");
 					String pwd = sc.nextLine();
-					infoNumber = p.login(name, pwd);
+					infoNumber = iDao.login(name, pwd);
 					if (infoNumber == 0) {
 						System.out.println("정보를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");
 						break;
@@ -43,8 +48,8 @@ public class TestMain {
 					String pwd = sc.nextLine();
 					System.out.print("나이: ");
 					int age = sc.nextInt();
-					if (p.signUp(name, pwd, age))
-						infoNumber = p.login(name, pwd);
+					if (iDao.signUp(name, pwd, age))
+						infoNumber = iDao.login(name, pwd);
 					else {
 						System.out.println("동일한 정보의 회원이 존재합니다. 처음부터 다시 실행합니다.");
 						break;
@@ -65,6 +70,9 @@ public class TestMain {
 				}else 
 					System.out.println("메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");				
 				break;
+			default:
+				System.out.println("입력한 메뉴는 존재하지 않습니다. 다시 입력하세요.");
+				
 			}
 		}
 	}
@@ -76,7 +84,7 @@ public class TestMain {
 		if (select == 0) {
 			System.out.print("새로운 브랜드명을 입력하세요: ");
 			String brand = sc.nextLine();
-			bDao.insertBrand(brand);
+			bDao.insertBrand(infoNumber, brand);
 		} else {
 			bDao.selectBrand(infoNumber, select);
 		}
