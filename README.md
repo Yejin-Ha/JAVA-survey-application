@@ -59,42 +59,37 @@
 <br/>
 
 ## 4. 기능 설계 - 결과 동작을 위한 클래스 정의
-### JdbcTemplate
+### 1. JdbcTemplate
 자주 쓰이는 JDBC API를 클래스로 정의하여 사용한다.
-
 <br/>
 
-### BrandVo
+### 2. BrandVo
 BRAND 테이블의 튜플을 저장하는 용도
-
 <br/>
 
-### VoteVo
+### 3. VoteVo
 VOTE 테이블의 튜플을 저장하는 용도
-
 <br/>
 
-### InfoDAO
+### 4. InfoDAO
 |구분|이름|기능|
 |---|---|---|
 |constructor|`InfoDAO()`|설문조사 참여 메뉴의 서브 메뉴(로그인/회원가입)를 콘솔에 출력한다.|
 |method|`signUp(String name, String pswd, int age)`|사용자가 입력한 값으로 회원가입을 한다.<br/>INFO 테이블에 값을 넣는다.|
 |method|`isExist(String name, String pwd)`|회원가입 시 INFO 테이블에 이름, 비밀번호 모두가 동일한 튜플이 존재하는지 확인한다.<br/>존재 시 `false`, 미존재 시 `true` 반환|
 |method|`login(String name, String pwd)`|INFO 테이블에 입력받은 정보와 동일한 튜플이 존재하는지 확인한다.<br/>존재하면 해당 튜플의 INFO_NUMBER를 반환|
-
 <br/>
 
-### BrandDAO
+### 5. BrandDAO
 |구분|이름|기능|
 |---|---|---|
 |method|`selectAll()`|사용자가 설문에 참여할 때 콘솔에 출력할 항목을 반환한다.<br/>BRAND 테이블에서 모든 데이터를 select 한 후 BrandVo를 생성해서 ArrayList에 추가한 후 해당 리스트를 반환<br/>|
 |method|`selectBrand(int infoNum, int brandNum)`|사용자가 투표한 결과를 VOTE 테이블에 저장한다.|
 |method|`insertBrand(int infoNumber, String brand)`|사용자가 새로운 투표 항목을 추가할 때 사용된다. <br/>사용자의 고유 번호와 새로운 브랜드명을 입력받아 BRAND 테이블에 항목을 추가한 후 `selectBrand` 메서드를 통해 투표한 결과를 저장한다.|
 |method|`brandNumber(int i)`|BRAND 테이블에서 모든 브랜드의 고유 번호를 ArrayList에 담아서 반환한다.<br/>사용자가 선택한 항목이 존재하는지 확인하는 용도로 사용함|
-
 <br/>
 
-### VoteDAO
+### 6. VoteDAO
 |구분|이름|기능|
 |---|---|---|
 |constructor|`VoteDao()`|설문 현황 확인 메뉴의 서브 메뉴들을 콘솔에 출력한다.|
@@ -102,7 +97,6 @@ VOTE 테이블의 튜플을 저장하는 용도
 |method|`selectAge()`|`getAges`를 통해 투표 데이터가 존재하면 해당 나이대에서 몇 명이 투표했는지와 투표 결과를 콘솔에 출력한다.|
 |method|`getAges()`|VOTE 테이블에서 투표한 나이대를 ArrayList에 담아 반환한다.<br/>'나이대 별 선호도' 메뉴에서 **투표한 나이대만 콘솔에 출력**하기 위한 메서드|
 |method|`getVotes(int age)`|검색하려는 나이대를 입력받아 해당 나이대의 전체 투표수를 key값으로 하고 해당 나이대의 투표 결과를 value로 하는 HashMap을 반환한다.|
-
 <br/>
 <br/>
 <hr>
