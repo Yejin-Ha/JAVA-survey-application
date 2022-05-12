@@ -1,5 +1,6 @@
 package surveyapplication;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -17,11 +18,11 @@ public class Test {
 			int menu = -1;
 			try {
 				menu = sc.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("숫자를 입력하세요.");
-				continue;
-			} finally {
 				sc.nextLine();
+			} catch (InputMismatchException e) {
+				sc.nextLine();
+				System.out.println("『숫자를 입력하세요.』");
+				continue;
 			}
 
 			if (menu == 0)
@@ -29,10 +30,18 @@ public class Test {
 
 			switch (menu) {
 			case 1:
-				InfoDAO iDao = new InfoDAO();
+				InfoDao iDao = new InfoDao();
 				int infoNumber;
-				int subMenu = sc.nextInt();
-				sc.nextLine();
+				int subMenu;
+				try {
+					subMenu = sc.nextInt();
+					sc.nextLine();
+				} catch (InputMismatchException e) {
+					sc.nextLine();
+					System.out.println("『숫자를 입력하세요.』");
+					continue;
+				}
+
 				if (subMenu == 1) {
 					System.out.print("이름 : ");
 					String name = sc.nextLine();
@@ -40,7 +49,7 @@ public class Test {
 					String pwd = sc.nextLine();
 					infoNumber = iDao.login(name, pwd);
 					if (infoNumber == 0) {
-						System.out.println("정보를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");
+						System.out.println("『정보를 잘못 입력하였습니다. 처음부터 다시 실행합니다.』");
 						break;
 					}
 					voteBrand(infoNumber);
@@ -55,34 +64,46 @@ public class Test {
 					if (iDao.signUp(name, pwd, age))
 						infoNumber = iDao.login(name, pwd);
 					else {
-						System.out.println("동일한 정보의 회원이 존재합니다. 처음부터 다시 실행합니다.");
+						System.out.println("『동일한 정보의 회원이 존재합니다. 처음부터 다시 실행합니다.』");
 						break;
 					}
 					voteBrand(infoNumber);
 				} else {
-					System.out.println("메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");
+					System.out.println("『메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.』");
 					break;
 				}
 				break;
 			case 2:
-				VoteDAO vDao = new VoteDAO();
-				int voteMenu = sc.nextInt();
-				sc.nextLine();
+				VoteDao vDao = new VoteDao();
+				int voteMenu;
+				try {
+					voteMenu = sc.nextInt();
+					sc.nextLine();
+				} catch (InputMismatchException e) {
+					sc.nextLine();
+					System.out.println("『숫자를 입력하세요.』");
+					continue;
+				}
+
 				if (voteMenu == 1)
 					vDao.selectAll();
 				else if (voteMenu == 2) {
 					vDao.selectAge();
 				} else
-					System.out.println("메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.");
+					System.out.println("『메뉴 번호를 잘못 입력하였습니다. 처음부터 다시 실행합니다.』");
 				break;
 			default:
-				System.out.println("입력한 메뉴는 존재하지 않습니다. 다시 입력하세요.");
+				System.out.println("『입력한 메뉴는 존재하지 않습니다. 다시 입력하세요.』");
 			}
 		}
 	}
 
 	public static void voteBrand(int infoNumber) {
-		BrandDAO bDao = new BrandDAO();
+		BrandDao bDao = new BrandDao();
+		ArrayList<BrandVo> ls = bDao.selectAll();
+		for (BrandVo b : ls) {
+			System.out.println(b);
+		}
 		boolean flag = false;
 		do {
 			int select = sc.nextInt();
@@ -95,5 +116,10 @@ public class Test {
 				flag = bDao.selectBrand(infoNumber, select);
 			}
 		} while (!flag);
+		System.out.println("『투표하였습니다.』");
+	}
+
+	public static void checkInputMisMatch(Object o) {
+
 	}
 }
