@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class VoteDao {
 	private JdbcTemplate jdbcTemplate;
@@ -43,19 +44,22 @@ public class VoteDao {
 	}
 
 	public void selectAge() {
-		ArrayList<Integer> lsI = getAges();
-		ArrayList<String> lsS = null;
+		ArrayList<Integer> ages = getAges();
+		HashMap<Integer, ArrayList<VoteVo>> map = null;
 
-		if (lsI == null) {
+		if (ages == null) {
 			System.out.println("『투표한 사람이 없습니다.』");
 			return;
 		}
-		for (int i : lsI) {
-			lsS = getVotes(i);
-			int person = Integer.parseInt(lsS.get(lsS.size() - 1));
+		for (int i : ages) {
+			map = getVotes(i);
+
+			Iterator<Integer> keys = map.keySet().iterator();
+			int person = keys.next();
+
 			System.out.println(i + "대 (총 " + person + "명)");
-			for (int j = 0; j < lsS.size() - 1; j++) {
-				System.out.println("\t" + lsS.get(j));
+			for (int j = 0; j < map.get(person).size(); j++) {
+				System.out.println("\t" + map.get(person).get(j));
 			}
 		}
 	}
@@ -87,13 +91,14 @@ public class VoteDao {
 		return (ls.size() == 0) ? null : ls;
 	}
 
-	private ArrayList<String> getVotes(int age) {
+	private HashMap<Integer, ArrayList<VoteVo>> getVotes(int age) {
 		int cnt = 0;
 		jdbcTemplate = JdbcTemplate.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<String> ls = new ArrayList<>();
+		ArrayList<VoteVo> ls = new ArrayList<>();
+		HashMap<Integer, ArrayList<VoteVo>> map = new HashMap<>();
 		String sql = "select (select TITLE from brand where brand_number=VT.brand_number) as TITLE, count(*) as CNT\r\n"
 				+ "from \"VOTE\" VT where info_number in(select info_number from info where age=?) group by brand_number";
 
@@ -104,10 +109,10 @@ public class VoteDao {
 
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				ls.add(rs.getString("TITLE") + "\t---> " + rs.getInt("CNT") + "명");
+				ls.add(new VoteVo(rs.getString("TITLE"), rs.getInt("CNT")));
 				cnt += rs.getInt("CNT");
 			}
-			ls.add(Integer.toString(cnt));
+			map.put(cnt, ls);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -115,6 +120,6 @@ public class VoteDao {
 			jdbcTemplate.close(pstmt);
 			jdbcTemplate.close(conn);
 		}
-		return (ls.size() == 0) ? null : ls;
+		return map;
 	}
 }
