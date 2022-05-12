@@ -4,18 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
-public class BrandDAO {
+public class BrandDao {
 	private JdbcTemplate jdbcTemplate;
 	private int length = 0;
 
-	public BrandDAO() {
+	public ArrayList<BrandVo> selectAll() {
 		jdbcTemplate = JdbcTemplate.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		ArrayList<BrandVo> ls = new ArrayList<>();
 		String sql = "select \"BRAND_NUMBER\", \"TITLE\" from \"BRAND\" order by \"BRAND_NUMBER\" asc";
 
 		try {
@@ -23,23 +23,25 @@ public class BrandDAO {
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
-			System.out.println("번호를 선택하세요.");
+			System.out.println("『번호를 선택하세요.』");
 			while (rs.next()) {
-				System.out.println(rs.getInt("BRAND_NUMBER") + ". " + rs.getString("TITLE"));
+				BrandVo tmp = new BrandVo(rs.getInt("BRAND_NUMBER"), rs.getString("TITLE"));
+				ls.add(tmp);
 				length = rs.getInt("BRAND_NUMBER");
 			}
-			System.out.println("0. 기타(직접 입력)");
+			ls.add(new BrandVo(0, "기타(직접 입력)"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			jdbcTemplate.close(pstmt);
 			jdbcTemplate.close(conn);
 		}
+		return ls;
 	}
 
 	public boolean selectBrand(int infoNum, int brandNum) {
 		if (!brandNumber(brandNum).contains(brandNum)) {
-			System.out.println("번호를 다시 입력하세요.");
+			System.out.println("『해당 번호는 존재하지 않습니다. 다시 입력하세요.』");
 			return false;
 		}
 		boolean result = false;

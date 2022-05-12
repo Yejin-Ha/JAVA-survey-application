@@ -5,12 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
-public class VoteDAO {
+public class VoteDao {
 	private JdbcTemplate jdbcTemplate;
 
-	public VoteDAO() {
+	public VoteDao() {
 		System.out.println("1. 전체 현황 보기");
 		System.out.println("2. 나이대 별 선호도 보기");
 	}
@@ -46,14 +47,15 @@ public class VoteDAO {
 		ArrayList<String> lsS = null;
 
 		if (lsI == null) {
-			System.out.println("투표한 사람이 없습니다.");
+			System.out.println("『투표한 사람이 없습니다.』");
 			return;
 		}
 		for (int i : lsI) {
 			lsS = getVotes(i);
-			System.out.println(i + "대 ");
-			for (String s : lsS) {
-				System.out.println("\t" + s);
+			int person = Integer.parseInt(lsS.get(lsS.size() - 1));
+			System.out.println(i + "대 (총 " + person + "명)");
+			for (int j = 0; j < lsS.size() - 1; j++) {
+				System.out.println("\t" + lsS.get(j));
 			}
 		}
 	}
@@ -86,6 +88,7 @@ public class VoteDAO {
 	}
 
 	private ArrayList<String> getVotes(int age) {
+		int cnt = 0;
 		jdbcTemplate = JdbcTemplate.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -102,7 +105,9 @@ public class VoteDAO {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				ls.add(rs.getString("TITLE") + "\t---> " + rs.getInt("CNT") + "명");
+				cnt += rs.getInt("CNT");
 			}
+			ls.add(Integer.toString(cnt));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

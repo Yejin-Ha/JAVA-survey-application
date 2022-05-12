@@ -5,11 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class InfoDAO {
+public class InfoDao {
 	private JdbcTemplate jdbcTemplate;
 
-	public InfoDAO() {
-		System.out.println("회원만 가능한 서비스입니다. 로그인 / 회원가입을 진행해주세요.");
+	public InfoDao() {
+		System.out.println("『회원만 가능한 서비스입니다. 로그인 / 회원가입을 진행해주세요.』");
 		System.out.println("1. 로그인");
 		System.out.println("2. 회원가입");
 	}
