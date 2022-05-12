@@ -52,6 +52,9 @@
 ## 3. 콘솔 출력 포멧 설계(UI) - 결과를 어떤 형태로 보여줄 것인가
 - eclipse console을 통해 설문조사를 실행한다.
 
+### < 콘솔 출력 영상 >
+![V20220512_130519000_29ABEF05-7DD7-40F2-B3AB-94CA115DA15E](https://user-images.githubusercontent.com/83754224/167993241-b9b2155c-e540-4cb9-881e-cbd2bc72598a.gif)
+
 <br/>
 <br/>
 
