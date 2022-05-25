@@ -8,23 +8,18 @@
 	InfoDao dao = new InfoDao();
 String id = request.getParameter("id");
 String pwd = request.getParameter("pwd");
-int check = dao.login(id, pwd);
-if (check == 1) {
+int infoNum = dao.login(id, pwd);
+if (infoNum > 0) {
 	session.setAttribute("loginID", id);
-	response.sendRedirect("main.jsp");
-} else if (check == 0) {
+	session.setAttribute("loginNum", infoNum);
+	response.sendRedirect("voteForm.jsp");
+} else {
 %>
 <script>
-	alert("비밀번호가 틀림");
+	alert("입력된 정보가 올바르지 않습니다.");
 	history.go(-1);
 </script>
-<%
-	} else {
-%>
-<script>
-	alert("존재하지 않는 회원입니다. 회원가입을 진행하세요.");
-	history.go(-1);
-</script>
+
 <%
 	}
 %>

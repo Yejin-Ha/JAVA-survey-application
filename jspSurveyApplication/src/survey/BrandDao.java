@@ -45,4 +45,55 @@ public class BrandDao {
 		}
 		return result;
 	}
+
+	public String insertBrand(String brand) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = pool.getConnection();
+			pstmt = conn.prepareStatement("insert into \"BRAND\" values (\"SEQ_BRAND\".nextval, ?)");
+			pstmt.setString(1, brand);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			pool.close(pstmt);
+			if (conn != null) {
+				try {
+					pool.releaseConnection(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return brandNum(brand);
+	}
+
+	public String brandNum(String brand) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String result = "";
+		try {
+			conn = pool.getConnection();
+			pstmt = conn.prepareStatement("select \"BRAND_NUMBER\" from \"BRAND\" where \"TITLE\" = ?");
+			pstmt.setString(1, brand);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = rs.getString("BRAND_NUMBER");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			pool.close(pstmt);
+			if (conn != null) {
+				try {
+					pool.releaseConnection(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
 }

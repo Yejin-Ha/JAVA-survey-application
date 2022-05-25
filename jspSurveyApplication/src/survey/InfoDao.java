@@ -83,16 +83,18 @@ public class InfoDao {
 
 		try {
 			conn = pool.getConnection();
-			String query = "select \"PWD\" from \"INFO\" where \"ID\" = ?";
+			String query = "select \"INFO_NUMBER\" from \"INFO\" where \"ID\" = ? and \"PWD\" = ?";
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, id);
+			pstmt.setString(2, pwd);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				result = (rs.getString("PWD").equals(pwd)) ? 1 : 0;
+				result = rs.getInt("INFO_NUMBER");
 			}
 		} catch (Exception e) {
 			System.out.println("Exception " + e);
 		} finally {
+			pool.close(rs);
 			pool.close(pstmt);
 			if (conn != null) {
 				try {
