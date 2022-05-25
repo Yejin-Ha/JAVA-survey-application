@@ -14,40 +14,74 @@ HashMap<Integer, ArrayList<VoteVo>> map = null;
 <meta charset="UTF-8">
 <title>설문조사 현황</title>
 <script src="js/script.js"></script>
+<style>
+button {
+	margin: 5px;
+}
+
+table {
+	min-width: 400px;
+}
+
+.tableBox {
+	display: flex;
+	justify-content: center;
+}
+</style>
 </head>
-<body>
-<h1>투표 결과 확인하기</h1>
-	<button onclick="clickAll()">전체 결과 보기</button>
-	<button onclick="clickAge()">나이대별 결과 보기</button>
-	<br />
-	<div id="all">
-		<%
-			for (VoteVo tmp : all) {
-		%>
-		<%=tmp%><br />
-		<%
-			}
-		%>
+<body style="text-align: center;">
+	<h1>투표 결과 확인하기</h1>
+	<div style="margin: 5px 0;">
+		<button onclick="clickAll()">전체 결과 보기</button>
+		<button onclick="clickAge()">나이대별 결과 보기</button>
 	</div>
-	<div id="age" style="display: none;">
+	<br />
+	<div id="all" class="tableBox">
+		<table border="2">
+			<th>브랜드</th>
+			<th>투표수</th>
+			<%
+				for (VoteVo tmp : all) {
+			%>
+			<tr>
+				<td><%=tmp.getBrand()%></td>
+				<td><%=tmp.getVote()%></td>
+			</tr>
+			<%
+				}
+			%>
+		</table>
+	</div>
+	<div id="age"
+		style="display: none; flex-direction: column; align-items: center;"
+		class="tableBox">
 		<%
-			boolean flag = false;
-		if (ages != null) {
-			flag = true;
+			if (ages != null) {
 			for (int i : ages) {
 				map = dao.getVotes(i);
 				Iterator<Integer> keys = map.keySet().iterator();
 				int person = keys.next();
 		%>
-		<%=i%>대
-		<%=person%>명 <br />
-		<%
-			for (int j = 0; j < map.get(person).size(); j++) {
-		%>
-		<%=map.get(person).get(j)%><br />
+		<h3><%=i%>대
+			<%=person%>명
+		</h3>
+		<table border="2">
+			<th>브랜드</th>
+			<th>투표수</th>
+			<%
+				for (int j = 0; j < map.get(person).size(); j++) {
+			%>
+			<tr>
+				<td><%=map.get(person).get(j).getBrand()%></td>
+				<td><%=map.get(person).get(j).getVote()%></td>
+			</tr>
+			<%
+				}
+			%>
+
+		</table>
 		<%
 			}
-		}
 		}
 		%>
 	</div>

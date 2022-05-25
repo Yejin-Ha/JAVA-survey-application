@@ -66,7 +66,7 @@ function clickAll(){
 	var all = document.getElementById("all");
 	var age = document.getElementById("age");
 	if(all.style.display =='none'){
-		all.style.display ='block';
+		all.style.display ='flex';
 	}
 	if(age.style.display !='none'){
 		age.style.display ='none';
@@ -80,7 +80,7 @@ function clickAge(){
 		all.style.display ='none';
 	}
 	if(age.style.display =='none'){
-		age.style.display ='block';
+		age.style.display ='flex';
 	}
 }
 
